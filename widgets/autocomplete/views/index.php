@@ -25,7 +25,9 @@
         $region = $address['city']->region_code;
         $city = [['id' => $address['city']->address_id, 'value' => $address['city']->getFullAddress(), 'mark' => 1]];
         $street = [['id' => $address['street']->address_id, 'value' => $address['street']->getFullAddress(), 'mark' => 1]];
-        $house = [['id' => $address['house']->house_id, 'value' => $address['house']->getFullNumber(), 'mark' => 1]];
+        $house = $address['house']
+            ? [['id' => $address['house']->house_id, 'value' => $address['house']->getFullNumber(), 'mark' => 1]]
+            : [];
     }
 ?>
 
@@ -122,6 +124,12 @@
             ]);
         ?>
     </div>
+    <?php if ($widget->additional_house_field) { ?>
+        <div class="form-group">
+            <label for="form-house">Номер дома *(при отсутствии в списке)</label>
+            <?= Html::input('text', Html::getInputName($widget->model, $widget->additional_house_field), $widget->model->getAttribute($widget->additional_house_field),['class' => 'form-control']) ?>
+        </div>
+    <?php } ?>
     <?php if ($widget->additional_column) { ?>
         <div class="form-group">
             <label for="form-house">Дополнительно (квартира, помещение)</label>
