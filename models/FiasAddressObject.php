@@ -216,19 +216,22 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
      */
     public function getFullAddress()
     {
-        $address = $this->getAddressRecursive();
-        $addresses = explode(';', $address);
-        $addresses = array_reverse($addresses);
-        return implode(', ', $addresses);
+        return $this->normalizeAddressString($this->getAddressRecursive());
     }
 
     public function getShortAddress()
     {
-        if ($this->address_level == 7 || $this->address_level == 91) {
-            return $this->getAddressRecursive(1);
+        if ($this->address_level == 4 || $this->address_level == 6) {
+            return $this->normalizeAddressString($this->getAddressRecursive(1));
         }
 
         return $this->replaceTitle();
+    }
+
+    public function normalizeAddressString($address)
+    {
+        $addresses = array_reverse(explode(';', $address));
+        return implode(', ', $addresses);
     }
 
     /**
