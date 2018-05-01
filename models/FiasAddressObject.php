@@ -224,18 +224,27 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
 
     public function getShortAddress()
     {
+        if ($this->address_level == 7 || $this->address_level == 91) {
+            return $this->getAddressRecursive(1);
+        }
+
         return $this->replaceTitle();
     }
 
     /**
      * @return string
      */
-    protected function getAddressRecursive()
+    protected function getAddressRecursive($maxLevel = null)
     {
         $address = $this->replaceTitle();
-        if ($this->parent) {
-            $address .= ';' . $this->parent->getAddressRecursive();
+        if ($maxLevel === 0) {
+            return $address;
         }
+
+        if ($this->parent) {
+            $address .= ';' . $this->parent->getAddressRecursive(--$maxLevel);
+        }
+
         return $address;
     }
 
