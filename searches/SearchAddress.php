@@ -125,7 +125,20 @@ class SearchAddress extends Model
             return $dataProvider;
         }
 
-        switch ($find){
+        if ($this->city_id) {
+            $this->parent_id = $this->city_id;
+        }
+        if ($this->street_id) {
+            $this->parent_id = $this->street_id;
+        }
+
+        if ($this->parent_id) {
+            $query->andWhere(['fias_address_object.parent_id' => $this->parent_id]);
+        } else {
+            $query->andFilterWhere(['fias_address_object.region_code' => $this->region]);
+        }
+
+        switch ($find) {
             case 'city':
                 $query->andWhere(['fias_address_object.address_level' => [4, 6]]);
                 break;
@@ -136,25 +149,14 @@ class SearchAddress extends Model
 
         $query->andFilterWhere(['like', 'fias_address_object.title', $this->query]);
 
-        $query->andFilterWhere([
-            'fias_address_object.region_code' => $this->region,
-        ]);
-
-        if($this->city_id){
-            $this->parent_id = $this->city_id;
-        }
-        if($this->street_id){
-            $this->parent_id = $this->street_id;
-        }
-
-        if($this->parent_id){
-            $query->join('left join', 'fias_address_object fa1', 'fa1.address_id = fias_address_object.parent_id');
-            $query->join('left join', 'fias_address_object fa2', 'fa2.address_id = fa1.parent_id');
-            $query->andWhere(['or',
-                ['fa1.address_id' => $this->parent_id],
-                ['fa2.address_id' => $this->parent_id],
-            ]);
-        }
+//        if ($this->parent_id) {
+//            $query->join('left join', 'fias_address_object fa1', 'fa1.address_id = fias_address_object.parent_id');
+//            $query->join('left join', 'fias_address_object fa2', 'fa2.address_id = fa1.parent_id');
+//            $query->andWhere(['or',
+//                ['fa1.address_id' => $this->parent_id],
+//                ['fa2.address_id' => $this->parent_id],
+//            ]);
+//        }
 
         return $dataProvider;
     }
