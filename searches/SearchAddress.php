@@ -179,7 +179,7 @@ class SearchAddress extends Model
             return $dataProvider;
         }
 
-        if($this->city_id){
+        if ($this->city_id) {
             $this->parent_id = $this->city_id;
         }
 
@@ -189,13 +189,15 @@ class SearchAddress extends Model
             $query->where('0 = 1');
         }
 
-        if($this->parent_id){
+        if ($this->parent_id) {
             $query->andWhere(['fias_house.address_id' => $this->parent_id]);
         }
 
-        if($this->query){
+        if ($this->query) {
             $query->andWhere(FiasHouse::tableName() . '.number like \'' .  intval($this->query) . '%\'');
         }
+
+        $query->andWhere(['<>', 'TRIM(fias_house.number)', '']);
 
         $query->groupBy('house_id');
 
