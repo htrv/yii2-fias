@@ -46,6 +46,8 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
     use UpdateModelTrait;
     use DeleteModelTrait;
 
+    private $_prefix;
+
     /**
      * @inheritdoc
      */
@@ -284,5 +286,26 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
             default:
                 return trim($this->prefix . '. ' . $this->title);
         }
+    }
+
+    public function getPrefixName()
+    {
+        if (is_null($this->_prefix)) {
+            $levelObject = FiasAddressObjectLevel::findOne(['level' => $this->address_level, 'short_title' => $this->prefix]);
+            if ($levelObject) {
+                $this->_prefix = strtolower($levelObject->title);
+            } elseif ($this->isStreet()) {
+                $this->_prefix = 'улица';
+            } else {
+                $this->_prefix = '';
+            }
+        }
+
+        return $this->_prefix;
+    }
+
+    public function isStreet()
+    {
+        return in_array($this->address_level, [7, 91]);
     }
 }

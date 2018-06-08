@@ -163,4 +163,30 @@ class FiasHouse extends ActiveRecord implements FiasModelInterface
 
         return $number;
     }
+
+    public function getBuildingType()
+    {
+        if (trim($this->building)) {
+            return 'корпус';
+        }
+
+        if (trim($this->structure)) {
+            return 'строение';
+        }
+
+        return '';
+    }
+
+    public function getBuilding()
+    {
+        if ($building = trim($this->building)) {
+            return $building;
+        }
+
+        if ($building = trim($this->structure)) {
+            return $building;
+        }
+
+        return '';
+    }
 }
