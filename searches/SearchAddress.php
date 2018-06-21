@@ -134,9 +134,6 @@ class SearchAddress extends Model
 
         if ($this->parent_id) {
             $query->andWhere(['fias_address_object.parent_id' => $this->parent_id]);
-        } else {
-            $query->andWhere('0=1');
-            return $dataProvider;
         }
 
         $query->andFilterWhere(['fias_address_object.region_code' => $this->region]);
@@ -192,6 +189,9 @@ class SearchAddress extends Model
 
         if ($this->parent_id) {
             $query->andWhere(['fias_house.address_id' => $this->parent_id]);
+        } else {
+            $query->andWhere('0=1');
+            return $dataProvider;
         }
 
         if ($this->query) {
