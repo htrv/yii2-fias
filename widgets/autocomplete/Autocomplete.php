@@ -7,6 +7,7 @@
     use solbianca\fias\models\FiasHouse;
     use solbianca\fias\models\FiasRegion;
     use yii\base\Widget;
+    use yii\helpers\Html;
 
     class Autocomplete extends Widget
     {
@@ -38,7 +39,7 @@
         {
             $address = [];
             //если есть фиасеный адресок, то заполняем инпуты
-            if($fiasID = $this->model->getAttribute($this->attribute)){
+            if($fiasID = $this->model->getAttribute(Html::getAttributeName($this->attribute))){
                 /** @var FiasHouse $house */
                 /** @var FiasAddressObject $street */
                 /** @var FiasAddressObject $city*/
