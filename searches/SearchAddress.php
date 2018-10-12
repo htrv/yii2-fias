@@ -119,6 +119,16 @@ class SearchAddress extends Model
             'query' => $query,
         ]);
 
+        if (isset($params['region']) && ($params['region'] == 77 || $params['region'] == 78)) {
+            if ($params['region'] == 77) {
+                $params['city_id'] = '0c5b2444-70a0-4932-980c-b4dc0d3f02b5';
+            }
+
+            if ($params['region'] == 78) {
+                $params['city_id'] = 'c2deb16a-0330-4f05-821f-1d09c93331e6';
+            }
+        }
+
         $this->load($params, '');
 
         if (!$this->validate()) {
